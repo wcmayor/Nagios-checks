@@ -8,13 +8,15 @@ if len(sys.argv) == 1:
     print("ERROR: No arguments received!")
     exit(3)
 
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
     print("ERROR: Incorrect number of arguments received!")
     exit(3)
 
 try:
-    warning = int(sys.argv[1])
-    critical = int(sys.argv[2])
+    hostip = str(sys.argv[1])
+    warning = int(sys.argv[2])
+    critical = int(sys.argv[3])
+
 except:
     print("ERROR: Unable to parse arguments!")
     exit(3)
@@ -23,7 +25,7 @@ if warning < critical:
     print("ERROR: Warning value cannot be greater than critical")
     exit(3)
 
-url = "http://192.168.100.1/indexData.htm"
+url = "http://" + hostip + "/indexData.htm"
 
 try:
     modem_output = urllib2.urlopen(url).read()
