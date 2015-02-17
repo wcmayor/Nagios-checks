@@ -26,12 +26,23 @@ if warning < critical:
     exit(3)
 
 url = "http://" + hostip + "/indexData.htm"
-
+log_url = "http://" + hostip + "/cmLogsData.htm"
+last_reboot_reason = ''
 try:
     modem_output = urllib2.urlopen(url).read()
 except:
     print("CRITICAL: Unable to open the modem status page!")
     exit(2)
+
+try:
+    log_output = urllib2.urlopen(log_url).read()
+    for line in log_output.split("\n"):
+        if "Reboot" in line:
+            last_reboot_reason = re.sub('</?T.>', '', line.strip())
+            last_reboot_reason = last_reboot_reason[:last_reboot_reason.find(' ;')]
+            break
+except:
+    last_reboot_reason = "Unable to determine last reboot reason"
 
 printnext = False
 
@@ -75,4 +86,5 @@ else:
     exit_code = 3
 
 print(status_text + output)
+print("Last reboot reason: " + last_reboot_reason)
 exit(exit_code)
